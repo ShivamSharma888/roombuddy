@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Secure Payment | Room Buddy</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root { --oyo-red: #ee2e24; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        body { background: #f3f5f7; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
+        
+        .payment-card {
+            background: #fff; padding: 30px; border-radius: 8px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            width: 100%; max-width: 400px; text-align: center;
+        }
+
+        .hotel-summary { border-bottom: 1px solid #eee; margin-bottom: 20px; padding-bottom: 20px; }
+        .hotel-summary h2 { font-size: 18px; color: #333; margin-bottom: 10px; }
+        
+        .price-row { display: flex; justify-content: space-between; margin: 10px 0; color: #555; }
+        .total { font-weight: 700; color: #000; font-size: 20px; border-top: 2px dashed #eee; padding-top: 10px; }
+
+        #rzp-button {
+            background: var(--oyo-red); color: white; border: none;
+            width: 100%; padding: 15px; border-radius: 5px;
+            font-size: 16px; font-weight: 700; cursor: pointer;
+            transition: background 0.3s;
+        }
+        #rzp-button:hover { background: #d21e15; }
+    </style>
+</head>
+<body>
+
+    <div class="payment-card">
+        <div class="hotel-summary">
+            <img src="https://images.unsplash.com/photo-1631049307264-da0ec9d70304?w=100" style="border-radius: 4px; margin-bottom: 10px;">
+            <h2 id="hotelName">Room BuddyFlagship Emerald</h2>
+            <p id="hotelLoc" style="font-size: 13px; color: #777;">New Delhi, India</p>
+        </div>
+
+        <div class="price-row"><span>Room Charges</span> <span id="basePrice">₹1249</span></div>
+        <div class="price-row"><span>Taxes & Fees (12%)</span> <span id="taxPrice">₹150</span></div>
+        <div class="price-row total"><span>Total to Pay</span> <span id="totalPrice">₹1399</span></div>
+
+        <button id="rzp-button">Pay with Razorpay</button>
+        <p style="font-size: 11px; color: #999; margin-top: 15px;">🔒 100% Secure Payment Powered by Razorpay</p>
+    </div>
+
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+    <script>
+        const payBtn = document.getElementById('rzp-button');
+
+        // Payment Configuration
+        const options = {
+            "key": "rzp_test_YOUR_KEY_HERE", // Replace with your Test Key ID from Razorpay Dashboard
+            "amount": "139900", // Amount is in currency subunits (1399 INR = 139900 paise)
+            "currency": "INR",
+            "name": "Room Buddy Stay",
+            "description": "Hotel Booking Payment",
+            "image": "https://upload.wikimedia.org/wikipedia/commons/1/19/OYO_Rooms_logo.svg",
+            "handler": function (response){
+                alert("Payment Successful!");
+                alert("Payment ID: " + response.razorpay_payment_id);
+                // Redirect to a success page here
+                window.location.href = "index.html";
+            },
+            "prefill": {
+                "name": "John Doe",
+                "email": "customer@example.com",
+                "contact": "9999999999"
+            },
+            "theme": {
+                "color": "#ee2e24" // Room BuddyRed
+            }
+        };
+
+        const rzp1 = new Razorpay(options);
+
+        payBtn.onclick = function(e){
+            rzp1.open();
+            e.preventDefault();
+        }
+    </script>
+</body>
+</html>

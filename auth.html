@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login / Signup | Room Buddy</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --oyo-red: #ee2e24;
+            --oyo-dark: #222;
+            --grey-text: #5f6368;
+            --border-color: #e0e0e0;
+            --bg-light: #f3f5f7;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        body { background-color: var(--bg-light); color: var(--oyo-dark); overflow-x: hidden; }
+
+        /* --- Header (Matching Index) --- */
+        header {
+            background: #fff;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            position: sticky; top: 0; z-index: 1000;
+        }
+        .navbar {
+            max-width: 1200px; margin: 0 auto;
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 12px 20px; height: 75px;
+        }
+        .logo { color: var(--oyo-red); font-size: 32px; font-weight: 800; text-decoration: none; }
+        .nav-links { display: flex; gap: 25px; align-items: center; }
+        .nav-item { text-decoration: none; color: #333; font-weight: 600; font-size: 14px; transition: 0.3s; }
+        .nav-item:hover { color: var(--oyo-red); }
+
+        .menu-toggle { display: none; cursor: pointer; flex-direction: column; gap: 5px; }
+        .menu-toggle span { width: 25px; height: 3px; background: #333; border-radius: 2px; }
+
+        /* --- Auth Section --- */
+        .auth-wrapper {
+            padding: 40px 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: calc(100vh - 150px);
+        }
+
+        .auth-container {
+            max-width: 1000px;
+            width: 100%;
+            background: #fff;
+            display: flex;
+            flex-direction: row;
+            min-height: 550px;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.1);
+        }
+
+        /* Left Side Panel */
+        .auth-visual {
+            flex: 1;
+            background: linear-gradient(rgba(238, 46, 36, 0.8), rgba(0,0,0,0.6)), 
+                        url('https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800');
+            background-size: cover;
+            background-position: center;
+            color: white;
+            padding: 40px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        .auth-visual h1 { font-size: 42px; font-weight: 800; line-height: 1.1; }
+        .auth-visual p { margin-top: 20px; font-size: 18px; opacity: 0.9; }
+
+        /* Right Side Form */
+        .auth-form-box {
+            flex: 1.2;
+            padding: 50px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .form-toggle { margin-bottom: 30px; display: flex; gap: 20px; }
+        .form-toggle span { 
+            font-size: 24px; font-weight: 800; 
+            cursor: pointer; color: #ccc; transition: 0.3s;
+        }
+        .form-toggle span.active { color: var(--oyo-dark); border-bottom: 4px solid var(--oyo-red); padding-bottom: 5px; }
+
+        .input-group { margin-bottom: 15px; }
+        .input-group label { display: block; font-size: 12px; font-weight: 700; margin-bottom: 5px; color: #555; text-transform: uppercase; }
+        .input-group input {
+            width: 100%; padding: 12px; border: 1px solid var(--border-color);
+            border-radius: 8px; font-size: 14px; outline: none; transition: 0.3s;
+        }
+        .input-group input:focus { border-color: var(--oyo-red); }
+
+        .auth-btn {
+            background: var(--oyo-dark); color: white; border: none;
+            padding: 14px; border-radius: 8px; font-size: 16px;
+            font-weight: 700; cursor: pointer; width: 100%; margin-top: 10px;
+            transition: 0.3s;
+        }
+        .auth-btn:hover { background: var(--oyo-red); transform: translateY(-2px); }
+
+        .switch-text { text-align: center; margin-top: 20px; font-size: 14px; color: var(--grey-text); }
+        .switch-text b { color: var(--oyo-red); cursor: pointer; }
+
+        /* --- Footer (Matching Index) --- */
+        footer { background: #222; color: white; padding: 60px 20px 20px; margin-top: 50px; }
+        .footer-container { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 40px; }
+        .footer-about h3 { color: var(--oyo-red); margin-bottom: 20px; font-size: 24px; }
+        .footer-bottom { border-top: 1px solid #444; margin-top: 40px; padding-top: 20px; text-align: center; font-size: 12px; color: #777; }
+
+        .hidden { display: none; }
+
+        /* --- Mobile Responsiveness --- */
+        @media (max-width: 850px) {
+            .auth-container { flex-direction: column; }
+            .auth-visual { padding: 40px 20px; text-align: center; }
+            .auth-visual h1 { font-size: 32px; }
+            .auth-form-box { padding: 30px 20px; }
+            .menu-toggle { display: flex; }
+            .nav-links { 
+                position: fixed; top: 75px; right: -100%; flex-direction: column; 
+                background: #fff; width: 75%; height: 100vh; padding: 40px; 
+                transition: 0.4s; box-shadow: -5px 0 15px rgba(0,0,0,0.1); 
+            }
+            .nav-links.active { right: 0; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <nav class="navbar">
+            <a href="index.html" class="logo">Room Buddy</a>
+            <div class="menu-toggle" onclick="toggleMenu()">
+                <span></span><span></span><span></span>
+            </div>
+            <div class="nav-links" id="navLinks">
+                <a href="index.html" class="nav-item">Home</a>
+                <a href="list-property.html" class="nav-item">List your property</a>
+                
+                <a href="team.html" class="nav-item">Our Team</a>
+                <a href="hotels.html" class="nav-item">Hotels</a>
+            </div>
+        </nav>
+    </header>
+
+    <div class="auth-wrapper">
+        <main class="auth-container">
+            <div class="auth-visual">
+                <h1>Better deals, <br> better stays.</h1>
+                <p>Join the Room Buddy family and access member-only rates across India.</p>
+            </div>
+
+            <div class="auth-form-box">
+                <div class="form-toggle">
+                    <span id="loginTab" class="active" onclick="switchForm('login')">Login</span>
+                    <span id="signupTab" onclick="switchForm('signup')">Signup</span>
+                </div>
+
+                <form id="loginForm">
+                    <div class="input-group">
+                        <label>Email / Phone</label>
+                        <input type="text" placeholder="Enter details" required>
+                    </div>
+                    <div class="input-group">
+                        <label>Password</label>
+                        <input type="password" placeholder="Enter password" required>
+                    </div>
+                    <button type="submit" class="auth-btn">Sign In</button>
+                    <p class="switch-text">New here? <b onclick="switchForm('signup')">Create account</b></p>
+                </form>
+
+                <form id="signupForm" class="hidden">
+                    <div class="input-group">
+                        <label>Full Name</label>
+                        <input type="text" placeholder="Your Name" required>
+                    </div>
+                    <div class="input-group">
+                        <label>Email Address</label>
+                        <input type="email" placeholder="email@example.com" required>
+                    </div>
+                    <div class="input-group">
+                        <label>Create Password</label>
+                        <input type="password" placeholder="Min. 8 characters" required>
+                    </div>
+                    <button type="submit" class="auth-btn">Register Now</button>
+                    <p class="switch-text">Already a member? <b onclick="switchForm('login')">Login</b></p>
+                </form>
+            </div>
+        </main>
+    </div>
+
+    <footer>
+        <div class="footer-container">
+            <div class="footer-about">
+                <h3>Room Buddy</h3>
+                <p style="color: #f5a623; font-style: italic; font-weight: 600; margin-bottom: 10px;">"Comfort in every corner."</p>
+                <p style="color: #ccc; font-size: 14px;">Explore India's most trusted budget hotel network.</p>
+            </div>
+            <div>
+                <h4 style="margin-bottom: 20px;">Contact Us</h4>
+                <p style="color: #aaa; font-size: 14px; margin-bottom: 8px;">📍 DLF Cyber City, Delhi</p>
+                <p style="color: #aaa; font-size: 14px; margin-bottom: 8px;">📞 +91 98765 43210</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2025 Room Buddy Project. Made with ❤️ in India.</p>
+        </div>
+    </footer>
+
+    <script>
+        function toggleMenu() {
+            document.getElementById('navLinks').classList.toggle('active');
+        }
+
+        function switchForm(type) {
+            const loginForm = document.getElementById('loginForm');
+            const signupForm = document.getElementById('signupForm');
+            const loginTab = document.getElementById('loginTab');
+            const signupTab = document.getElementById('signupTab');
+
+            if (type === 'signup') {
+                loginForm.classList.add('hidden');
+                signupForm.classList.remove('hidden');
+                signupTab.classList.add('active');
+                loginTab.classList.remove('active');
+            } else {
+                signupForm.classList.add('hidden');
+                loginForm.classList.remove('hidden');
+                loginTab.classList.add('active');
+                signupTab.classList.remove('active');
+            }
+        }
+
+        // Redirect logic on submit
+        document.getElementById('loginForm').onsubmit = (e) => {
+            e.preventDefault();
+            window.location.href = "index.html";
+        };
+    </script>
+</body>
+</html>

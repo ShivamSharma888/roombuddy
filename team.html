@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Our Team | Room Buddy</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --oyo-red: #ee2e24;
+            --oyo-dark: #222;
+            --grey: #5f6368;
+            --bg-light: #f3f5f7;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        body { background-color: var(--bg-light); color: var(--oyo-dark); line-height: 1.6; }
+
+        /* --- Updated Responsive Header --- */
+        header {
+            background: #fff;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            position: sticky; top: 0; width: 100%; z-index: 1000;
+        }
+        .navbar {
+            max-width: 1200px; margin: 0 auto;
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 12px 20px; height: 70px;
+        }
+        .logo { color: var(--oyo-red); font-size: 30px; font-weight: 800; text-decoration: none; }
+        
+        .nav-links { display: flex; gap: 25px; align-items: center; }
+        .nav-item { text-decoration: none; color: #333; font-weight: 600; font-size: 14px; }
+        .login-btn { 
+            background: #000; color: #fff; padding: 10px 20px; 
+            border-radius: 4px; border: none; font-weight: 600; cursor: pointer;
+        }
+
+        .menu-toggle { display: none; flex-direction: column; gap: 5px; cursor: pointer; }
+        .menu-toggle span { width: 25px; height: 3px; background: #333; border-radius: 2px; }
+
+        /* --- Team Section --- */
+        .team-hero {
+            background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=1400');
+            background-size: cover; background-position: center;
+            padding: 100px 20px; text-align: center; color: white;
+        }
+        .team-hero h1 { font-size: 48px; margin-bottom: 10px; }
+
+        .team-container {
+            max-width: 1200px; margin: -50px auto 80px;
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px; padding: 0 20px;
+        }
+
+        .team-card {
+            background: #fff; border-radius: 15px; overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1); transition: 0.3s;
+            text-align: center;
+        }
+        .team-card:hover { transform: translateY(-10px); }
+
+        .image-box { height: 280px; width: 100%; overflow: hidden; }
+        .image-box img { width: 100%; height: 100%; object-fit: cover; }
+
+        .info-box { padding: 25px; }
+        .info-box h3 { font-size: 22px; margin-bottom: 5px; }
+        .info-box .role { color: var(--oyo-red); font-weight: 700; font-size: 14px; text-transform: uppercase; display: block; margin-bottom: 15px; }
+        
+        .contact-links { border-top: 1px solid #eee; padding-top: 15px; margin-top: 15px; }
+        .contact-links a { 
+            display: block; color: var(--grey); text-decoration: none; 
+            font-size: 13px; margin-bottom: 5px; transition: 0.2s;
+        }
+        .contact-links a:hover { color: var(--oyo-red); }
+
+        /* --- Footer --- */
+        footer { background: #222; color: white; padding: 60px 20px 20px; }
+        .footer-grid {
+            max-width: 1200px; margin: 0 auto;
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 40px;
+        }
+        .footer-logo { color: var(--oyo-red); font-size: 28px; font-weight: 800; margin-bottom: 15px; display: block; text-decoration: none; }
+        .motivation { font-style: italic; color: #f5a623; margin-bottom: 15px; font-size: 14px; font-weight: 600; }
+
+        /* --- Mobile Responsiveness --- */
+        @media (max-width: 768px) {
+            .menu-toggle { display: flex; }
+            .nav-links {
+                position: fixed; top: 70px; right: -100%; background: #fff;
+                width: 80%; height: 100vh; flex-direction: column; padding: 40px;
+                transition: 0.4s; box-shadow: -5px 0 15px rgba(0,0,0,0.1);
+            }
+            .nav-links.active { right: 0; }
+            .team-hero h1 { font-size: 32px; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <nav class="navbar">
+            <a href="index.html" class="logo">Room Buddy</a>
+            <div class="menu-toggle" id="mobile-menu">
+                <span></span><span></span><span></span>
+            </div>
+            <div class="nav-links" id="nav-list">
+                <a href="index.html" class="nav-item">Home</a>
+                <a href="list-property.html" class="nav-item">List Property</a>
+                <a href="team.html" class="nav-item" style="color:var(--oyo-red)">Our Team</a>
+                <a href="hotels.html" class="nav-item">Hotels</a>
+                <button class="login-btn" onclick="location.href='auth.html'">Login</button>
+            </div>
+        </nav>
+    </header>
+
+    <section class="team-hero">
+        <h1>Meet the Architects</h1>
+        <p>Building the future of hospitality, one line of code at a time.</p>
+    </section>
+
+    
+
+    <main class="team-container" id="teamGrid">
+        </main>
+
+    <footer>
+        <div class="footer-grid">
+            <div>
+                <a href="#" class="footer-logo">OYO</a>
+                <p class="motivation">"Excellence is not a skill, it is an attitude."</p>
+                <p style="color:#aaa; font-size: 13px;">Our team is dedicated to providing you the best experience in finding sanitized, budget-friendly hotels.</p>
+            </div>
+            <div>
+                <h4 style="margin-bottom: 15px;">Contact Us</h4>
+                <p style="color:#aaa; font-size: 13px;">📍 DLF Cyber City, Phase 3, Delhi NCR</p>
+                <p style="color:#aaa; font-size: 13px;">📞 +91 99999 88888</p>
+                <p style="color:#aaa; font-size: 13px;">📧 team@oyoclone.com</p>
+            </div>
+            <div>
+                <h4 style="margin-bottom: 15px;">Our Presence</h4>
+                <div style="height: 120px; border-radius: 8px; overflow: hidden;">
+                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d224345.8392319277!2d77.0688975472!3d28.527280300000003!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x390cfd5b347eb62d%3A0x37205b71dbff41d5!2sDelhi!5e0!3m2!1sen!2sin!4v1703923200000!5m2!1sen!2sin" width="100%" height="100%" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+                </div>
+            </div>
+        </div>
+        <p style="text-align: center; margin-top: 40px; color: #666; font-size: 12px;">© 2025 Room Buddy Team Project. For Educational Purposes.</p>
+    </footer>
+
+    <script>
+        const members = [
+            { name: "Arjun Mehta", role: "Founder & CEO", email: "arjun@oyoclone.com", phone: "+91 98765 43210", img: "https://images.unsplash.com/photo-1560250097-0b93528c311a?w=400" },
+            { name: "Sara Khan", role: "CTO", email: "sara@oyoclone.com", phone: "+91 98765 43211", img: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=400" },
+            { name: "Vikram Singh", role: "Product Head", email: "vikram@oyoclone.com", phone: "+91 98765 43212", img: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400" },
+            { name: "Ishani Roy", role: "Lead Designer", email: "ishani@oyoclone.com", phone: "+91 98765 43213", img: "https://images.unsplash.com/photo-1580489944761-15a19d654956?w=400" }
+        ];
+
+        const grid = document.getElementById('teamGrid');
+        grid.innerHTML = members.map(m => `
+            <div class="team-card">
+                <div class="image-box"><img src="${m.img}" alt="${m.name}"></div>
+                <div class="info-box">
+                    <h3>${m.name}</h3>
+                    <span class="role">${m.role}</span>
+                    <div class="contact-links">
+                        <a href="mailto:${m.email}">✉️ ${m.email}</a>
+                        <a href="tel:${m.phone.replace(/\s/g, '')}">📞 ${m.phone}</a>
+                    </div>
+                </div>
+            </div>
+        `).join('');
+
+        // Mobile Menu Toggle
+        document.getElementById('mobile-menu').addEventListener('click', () => {
+            document.getElementById('nav-list').classList.toggle('active');
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hotel Details | Room Buddy</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.css" />
+
+    <style>
+        :root {
+            --oyo-red: #ee2e24;
+            --oyo-dark: #222;
+            --grey: #5f6368;
+            --border: #e0e0e0;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        body { background: #fff; color: var(--oyo-dark); padding-top: 70px; }
+
+        /* --- Header --- */
+        header {
+            background: #fff;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            position: fixed; top: 0; width: 100%; z-index: 1000;
+            height: 70px; display: flex; align-items: center;
+        }
+        .navbar {
+            max-width: 1200px; margin: 0 auto; width: 100%;
+            display: flex; justify-content: space-between; padding: 0 20px;
+        }
+        .logo { color: var(--oyo-red); font-size: 28px; font-weight: 800; text-decoration: none; }
+
+        /* --- Main Layout --- */
+        .main-container {
+            max-width: 1200px; margin: 20px auto;
+            display: grid; grid-template-columns: 2fr 1fr; gap: 30px;
+            padding: 0 20px;
+        }
+
+        /* --- Image Gallery --- */
+        .gallery {
+            display: grid; grid-template-columns: 2fr 1fr; grid-template-rows: 200px 200px;
+            gap: 10px; margin-bottom: 30px;
+        }
+        .gallery img { width: 100%; height: 100%; object-fit: cover; border-radius: 8px; }
+        .main-img { grid-row: span 2; }
+
+        /* --- Hotel Details --- */
+        .hotel-info h1 { font-size: 32px; margin-bottom: 5px; }
+        .rating { background: #1ab64f; color: white; padding: 4px 10px; border-radius: 4px; font-weight: bold; font-size: 14px; }
+        
+        /* NEW: Address & Contact Section */
+        .address-box {
+            display: flex; align-items: flex-start; gap: 10px; margin-bottom: 15px; color: var(--grey); font-size: 15px;
+        }
+        .contact-box {
+            background: #f9f9f9; border: 1px solid var(--border); border-radius: 8px;
+            padding: 15px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center;
+        }
+        .contact-number { font-size: 18px; font-weight: 700; color: var(--oyo-dark); }
+        .call-btn { text-decoration: none; color: var(--oyo-red); font-weight: 700; font-size: 14px; border: 1px solid var(--oyo-red); padding: 5px 15px; border-radius: 4px; transition: 0.3s; }
+        .call-btn:hover { background: var(--oyo-red); color: white; }
+
+        .amenities-grid {
+            display: grid; grid-template-columns: repeat(3, 1fr);
+            gap: 15px; margin-top: 20px; padding: 20px 0;
+            border-top: 1px solid var(--border);
+        }
+        .amenity { font-size: 14px; color: #444; display: flex; align-items: center; gap: 8px; }
+
+        /* --- Map Section --- */
+        #map {
+            height: 350px; width: 100%; border-radius: 12px;
+            margin-top: 15px; border: 1px solid var(--border);
+        }
+        .map-btn {
+            background: var(--oyo-dark); color: white; border: none;
+            padding: 10px 20px; border-radius: 6px; cursor: pointer;
+            font-weight: 600; margin-top: 10px;
+        }
+
+        /* --- Sticky Booking Card --- */
+        .booking-card {
+            border: 1px solid var(--border); border-radius: 12px;
+            padding: 24px; position: sticky; top: 100px;
+            background: white; box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            height: fit-content;
+        }
+        .price-row { display: flex; align-items: center; gap: 10px; margin-bottom: 15px; }
+        .current-price { font-size: 26px; font-weight: 800; }
+        .old-price { text-decoration: line-through; color: var(--grey); }
+
+        .book-btn {
+            background: #1ab64f; color: white; border: none;
+            width: 100%; padding: 16px; border-radius: 6px;
+            font-size: 18px; font-weight: 700; cursor: pointer;
+            margin-top: 20px;
+        }
+
+        /* --- Mobile Responsiveness --- */
+        @media (max-width: 850px) {
+            .main-container { grid-template-columns: 1fr; }
+            .side-img { display: none; }
+            .gallery { grid-template-columns: 1fr; grid-template-rows: 300px; }
+            .booking-card {
+                position: fixed; bottom: 0; left: 0; right: 0; top: auto;
+                border-radius: 0; border-top: 3px solid var(--oyo-red);
+                z-index: 2000; padding: 15px 20px;
+            }
+            body { padding-bottom: 120px; }
+            .amenities-grid { grid-template-columns: 1fr 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="navbar">
+            <a href="index.html" class="logo">Room Buddy</a>
+            <div style="font-weight: 600; color: var(--grey); font-size: 14px;">Support: 8278887412</div>
+        </div>
+    </header>
+
+    <main class="main-container">
+        <section>
+            <div class="gallery">
+                <img src="https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800" class="main-img" id="mainImage">
+                <img src="https://images.unsplash.com/photo-1582719508461-905c673771fd?w=400" class="side-img">
+                <img src="https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?w=400" class="side-img">
+            </div>
+
+            <div class="hotel-info">
+                <h1 id="hotelTitle">Loading Hotel...</h1>
+                
+                <div class="address-box">
+                    <span>📍</span>
+                    <span id="hotelAddress">Fetching location details...</span>
+                </div>
+
+                <div style="margin-bottom: 20px;">
+                    <span class="rating">4.5 ★</span> <span style="font-size: 14px; color: var(--grey);">(Verified Stay)</span>
+                </div>
+
+                <div class="contact-box">
+                    <div>
+                        <div style="font-size: 12px; color: var(--grey); font-weight: 700; text-transform: uppercase;">Front Desk Number</div>
+                        <div class="contact-number" id="hotelPhone">+91 82788 87412</div>
+                    </div>
+                    <a href="#" class="call-btn" id="callBtn">📞 Call Hotel</a>
+                </div>
+
+                <div class="amenities-grid">
+                    <div class="amenity">📶 Free Wi-Fi</div>
+                    <div class="amenity">❄️ AC</div>
+                    <div class="amenity">📺 TV</div>
+                    <div class="amenity">🚿 Geyser</div>
+                    <div class="amenity">🔋 Power Backup</div>
+                    <div class="amenity">🅿️ Parking</div>
+                </div>
+
+                <div style="margin-top: 20px;">
+                    <h3>Location & Directions</h3>
+                    <p style="font-size: 14px; color: var(--grey); margin-top: 5px;">Get precise directions to the property.</p>
+                    <button class="map-btn" onclick="getDirections()">Find Way from My Location</button>
+                    <div id="map"></div>
+                </div>
+            </div>
+        </section>
+
+        <aside>
+            <div class="booking-card">
+                <div class="price-row">
+                    <span class="current-price" id="hotelPrice">₹0</span>
+                    <span class="old-price" id="oldPrice">₹0</span>
+                    <span style="color: #f5a623; font-weight: 700; font-size: 14px;">40% OFF</span>
+                </div>
+                
+                <div style="border: 1px solid var(--border); border-radius: 8px; padding: 10px;">
+                    <p style="font-size: 11px; font-weight: 700; color: var(--grey);">DATES & GUESTS</p>
+                    <p style="font-size: 14px; font-weight: 600;">Today - 1 Room, 2 Guests</p>
+                </div>
+
+                <button class="book-btn" onclick="alert('Proceeding to Secure Payment Gateway...');">Pay Now to Book</button>
+                <p style="text-align: center; margin-top: 15px; font-size: 12px; color: var(--oyo-red); font-weight: bold; cursor: pointer;">
+                    Free Cancellation (24 hrs)
+                </p>
+            </div>
+        </aside>
+    </main>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://unpkg.com/leaflet-routing-machine@latest/dist/leaflet-routing-machine.js"></script>
+
+    <script>
+        // 1. DYNAMIC DATA POPULATION
+        const params = new URLSearchParams(window.location.search);
+        
+        // Get Name & Price from URL
+        const hotelName = params.get('name') || "Room Buddy Flagship Stay";
+        const price = params.get('price') || "1200";
+        
+        // Smart Address Generator (Since API usually gives name only, we simulate address based on city in name)
+        let city = "Himachal Pradesh";
+        if(hotelName.includes("Shimla")) city = "Shimla";
+        else if(hotelName.includes("Manali")) city = "Manali";
+        else if(hotelName.includes("Delhi")) city = "New Delhi";
+        else if(hotelName.includes("Goa")) city = "Goa";
+
+        const generatedAddress = `Plot No. ${Math.floor(Math.random()*100) + 1}, Near Main Market, ${city}, India.`;
+        
+        // Generate a pseudo-random phone number for this hotel
+        const randomPhone = "+91 " + (Math.floor(Math.random() * 9000000000) + 1000000000);
+
+        // Update UI
+        document.getElementById('hotelTitle').innerText = hotelName;
+        document.getElementById('hotelPrice').innerText = '₹' + price;
+        document.getElementById('oldPrice').innerText = '₹' + Math.floor(parseInt(price) * 1.4);
+        document.getElementById('hotelAddress').innerText = generatedAddress;
+        document.getElementById('hotelPhone').innerText = randomPhone;
+        document.getElementById('callBtn').href = "tel:" + randomPhone;
+
+        // 2. MAP SETUP
+        // We use a default coordinate set, but ideally this comes from the database
+        const hotelCoords = [31.1048, 77.1734]; // Defaulting to Shimla coordinates for demo
+        var map = L.map('map').setView(hotelCoords, 14);
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap'
+        }).addTo(map);
+
+        L.marker(hotelCoords).addTo(map)
+            .bindPopup(`<b>${hotelName}</b><br>${generatedAddress}`)
+            .openPopup();
+
+        // 3. NAVIGATION LOGIC
+        function getDirections() {
+            if (!navigator.geolocation) {
+                alert("Geolocation is not supported by your browser");
+                return;
+            }
+
+            navigator.geolocation.getCurrentPosition(function(position) {
+                const userLat = position.coords.latitude;
+                const userLng = position.coords.longitude;
+
+                L.Routing.control({
+                    waypoints: [
+                        L.latLng(userLat, userLng),
+                        L.latLng(hotelCoords[0], hotelCoords[1])
+                    ],
+                    lineOptions: { styles: [{ color: '#ee2e24', weight: 6 }] },
+                    createMarker: function() { return null; }
+                }).addTo(map);
+
+            }, function() {
+                alert("Please enable GPS to see directions.");
+            });
+        }
+    </script>
+</body>
+</html>

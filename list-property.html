@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>List Your Property | Room BuddyClone Partner</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --oyo-red: #ee2e24;
+            --oyo-dark: #222;
+            --grey-text: #5f6368;
+            --border-color: #e0e0e0;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        body { background-color: #f3f5f7; color: var(--oyo-dark); overflow-x: hidden; }
+
+        /* --- Header & Responsive Nav (Matches Index) --- */
+        header {
+            background: #fff;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            position: sticky; top: 0; z-index: 1000;
+        }
+
+        .navbar {
+            max-width: 1200px; margin: 0 auto;
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 12px 20px; height: 75px;
+        }
+
+        .logo { color: var(--oyo-red); font-size: 32px; font-weight: 800; text-decoration: none; }
+
+        .nav-links { display: flex; gap: 25px; align-items: center; }
+        .nav-item { text-decoration: none; color: #333; font-weight: 600; font-size: 14px; transition: 0.3s; }
+        .nav-item:hover { color: var(--oyo-red); }
+        
+        .login-btn { 
+            background: #000; color: #fff; padding: 10px 22px; 
+            border-radius: 4px; border: none; font-weight: 700; cursor: pointer; transition: 0.3s;
+        }
+
+        .menu-toggle { display: none; cursor: pointer; flex-direction: column; gap: 5px; }
+        .menu-toggle span { width: 25px; height: 3px; background: #333; border-radius: 2px; }
+
+        /* --- Hero Section --- */
+        .partner-hero {
+            background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('https://images.unsplash.com/photo-1441033819590-da848e30979a?w=1400');
+            background-size: cover; background-position: center;
+            height: 400px; display: flex; align-items: center; justify-content: center;
+            text-align: center; color: white; padding: 20px;
+        }
+
+        .hero-content h1 { font-size: clamp(28px, 5vw, 42px); margin-bottom: 15px; font-weight: 800; }
+        .hero-content p { font-size: 18px; opacity: 0.9; max-width: 600px; margin: 0 auto; }
+
+        /* --- Benefits Grid --- */
+        .benefits {
+            max-width: 1200px; margin: -60px auto 60px;
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px; padding: 0 20px;
+        }
+
+        .benefit-card {
+            background: white; padding: 30px; border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1); text-align: center;
+        }
+        .benefit-card h3 { color: var(--oyo-red); margin-bottom: 10px; font-size: 20px; }
+
+        /* --- Form Section --- */
+        .form-section {
+            max-width: 800px; margin: 60px auto;
+            background: white; padding: 40px; border-radius: 15px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+        }
+
+        .form-section h2 { margin-bottom: 30px; text-align: center; font-size: 26px; }
+
+        .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .full-width { grid-column: span 2; }
+
+        .form-group label { display: block; font-size: 13px; font-weight: 700; margin-bottom: 8px; color: #555; }
+        .form-group input, .form-group select, .form-group textarea {
+            width: 100%; padding: 12px; border: 1px solid #ddd;
+            border-radius: 6px; font-size: 15px; outline: none;
+        }
+        .form-group input:focus { border-color: var(--oyo-red); }
+
+        .submit-btn {
+            background: var(--oyo-red); color: white; border: none;
+            padding: 16px; border-radius: 6px; font-size: 16px;
+            font-weight: 700; cursor: pointer; width: 100%; margin-top: 20px;
+            transition: 0.3s;
+        }
+        .submit-btn:hover { background: #d21e15; }
+
+        /* --- Footer (Matches Index) --- */
+        footer { background: #222; color: white; padding: 60px 20px 20px; margin-top: 80px; }
+        .footer-container { max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 40px; }
+        .footer-about h3 { color: var(--oyo-red); margin-bottom: 20px; }
+
+        /* Mobile Adjustments */
+        @media (max-width: 768px) {
+            .menu-toggle { display: flex; }
+            .nav-links {
+                position: fixed; top: 75px; right: -100%; flex-direction: column;
+                background: #fff; width: 75%; height: 100vh; padding: 40px;
+                transition: 0.4s; box-shadow: -5px 0 15px rgba(0,0,0,0.1);
+            }
+            .nav-links.active { right: 0; }
+            .form-grid { grid-template-columns: 1fr; }
+            .full-width { grid-column: span 1; }
+            .benefits { margin-top: 20px; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <nav class="navbar">
+            <a href="index.html" class="logo">Room Buddy</a>
+            <div class="menu-toggle" onclick="toggleMenu()">
+                <span></span><span></span><span></span>
+            </div>
+            <div class="nav-links" id="navLinks">
+                <a href="index.html" class="nav-item">Home</a>
+                <a href="list-property.html" class="nav-item" style="color: var(--oyo-red);">List your property</a>
+                <a href="team.html" class="nav-item">Our Team</a>
+                <a href="hotels.html" class="nav-item">Hotels</a>
+                <button class="login-btn" onclick="window.location.href='auth.html'">Login / Signup</button>
+            </div>
+        </nav>
+    </header>
+
+    <section class="partner-hero">
+        <div class="hero-content">
+            <h1>Become an Room BuddyPartner</h1>
+            <p>Join the world's fastest-growing hotel chain and see your occupancy jump from 30% to 80%.</p>
+        </div>
+    </section>
+
+    <section class="benefits">
+        <div class="benefit-card">
+            <h3>30% Revenue Lift</h3>
+            <p>Our dynamic pricing algorithm ensures you always get the best price for your rooms.</p>
+        </div>
+        <div class="benefit-card">
+            <h3>Technology Driven</h3>
+            <p>Manage bookings, housekeeping, and finances all from a single mobile app.</p>
+        </div>
+        <div class="benefit-card">
+            <h3>Global Brand</h3>
+            <p>Get instant access to over 100 million Room Buddycustomers across the globe.</p>
+        </div>
+    </section>
+
+    <section class="form-section">
+        <h2>Register Your Property</h2>
+        <form id="propertyForm">
+            <div class="form-grid">
+                <div class="form-group">
+                    <label>Property Name</label>
+                    <input type="text" placeholder="e.g. Grand Plaza Resort" required>
+                </div>
+                <div class="form-group">
+                    <label>Property Type</label>
+                    <select>
+                        <option>Hotel</option>
+                        <option>Apartment / Home</option>
+                        <option>Guesthouse</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Owner Name</label>
+                    <input type="text" placeholder="Your full name" required>
+                </div>
+                <div class="form-group">
+                    <label>Phone Number</label>
+                    <input type="tel" placeholder="+91 00000 00000" required>
+                </div>
+                <div class="form-group full-width">
+                    <label>Property Address</label>
+                    <input type="text" placeholder="Full address of your property" required>
+                </div>
+                <div class="form-group">
+                    <label>City</label>
+                    <input type="text" placeholder="e.g. New Delhi" required>
+                </div>
+                <div class="form-group">
+                    <label>Total Rooms</label>
+                    <input type="number" placeholder="No. of rooms">
+                </div>
+                <div class="form-group full-width">
+                    <label>Message / Additional Details</label>
+                    <textarea rows="4" placeholder="Tell us more about your property..."></textarea>
+                </div>
+            </div>
+            <button type="submit" class="submit-btn">Send My Details</button>
+        </form>
+    </section>
+
+    <footer>
+        <div class="footer-container">
+            <div class="footer-about">
+                <h3>Room BuddyClone Stay</h3>
+                <p style="color: #f5a623; font-weight: 600; margin-bottom: 10px;">"Comfort in every corner."</p>
+                <p style="color: #ccc; font-size: 14px;">Providing affordable luxury and sanitized stays across India.</p>
+            </div>
+            <div>
+                <h4 style="margin-bottom: 20px;">Contact Us</h4>
+                <p style="color: #aaa; font-size: 14px;">📍 DLF Cyber City, Delhi</p>
+                <p style="color: #aaa; font-size: 14px;">📞 +91 98765 43210</p>
+            </div>
+        </div>
+        <p style="text-align: center; margin-top: 40px; color: #666; font-size: 12px;">© 2025 Room BuddyClone Project. Made with ❤️ in India.</p>
+    </footer>
+
+    <script>
+        function toggleMenu() {
+            document.getElementById('navLinks').classList.toggle('active');
+        }
+
+        document.getElementById('propertyForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            alert("Thank you! Our partner onboarding team will contact you within 24 hours.");
+            window.location.href = 'index.html';
+        });
+    </script>
+</body>
+</html>
